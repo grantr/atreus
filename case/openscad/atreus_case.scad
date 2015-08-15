@@ -63,6 +63,9 @@ quarter_spacer = false;
 /* Where the top/bottom split of a quartered spacer will be. */
 spacer_quartering_offset = 60;
 
+/* Radius of the trackpoint stalk hole */
+trackpoint_hole_radius = 3;
+
 module rz(angle, center=undef) {
   /* Rotate children `angle` degrees around `center`. */
   translate(center) {
@@ -111,9 +114,9 @@ module regular_key(position, size) {
 }
 
 module thumb_key(position, size) {
-  /* Create a hole for a 1x1.5 unit thumb key. */
+  /* Create a hole for a 1x1.25 unit thumb key. */
   translate(position) {
-    scale([1, 1.5]) {
+    scale([1, 1.25]) {
       translate(-position) {
         regular_key(position, size);
       }
@@ -205,19 +208,19 @@ module right_screw_holes(hole_radius) {
   /* and after */
   tmp = rz_fun(back_right, angle, [0, 2.25*column_spacing]);
 
-  nudge = 0.75;
+  nudge = .75;
 
   rotate_half() {
     add_hand_separation() {
       screw_hole(hole_radius, washer_radius,
                  [row_spacing, 0],
-                 [-nudge, -nudge]);
+                 [-nudge+2, -nudge-2]);
       screw_hole(hole_radius, washer_radius,
                  [(n_cols+n_thumb_keys)*row_spacing, staggering_offsets[n_cols-1]],
                  [nudge, -nudge]);
       screw_hole(hole_radius, washer_radius,
                  back_right,
-                 [nudge, nudge]);
+                 [nudge+2, nudge]);
     }
   }
 
@@ -241,6 +244,12 @@ module screw_holes(hole_radius) {
   mirror ([1,0,0]) { right_screw_holes(hole_radius); }
 }
 
+module trackpoint_holes() {
+  translate([0,10]) {
+      circle(trackpoint_hole_radius);
+  }
+}
+
 module left_half(switch_holes=true, key_size=key_hole_size) {
   mirror ([1,0,0]) { right_half(switch_holes, key_size); }
 }
@@ -259,6 +268,7 @@ module top_plate() {
     bottom_plate();
     right_half(false);
     left_half(false);
+    trackpoint_holes();
   }
 }
 
@@ -268,6 +278,7 @@ module switch_plate() {
     bottom_plate();
     right_half();
     left_half();
+    trackpoint_holes();
   }
 }
 
