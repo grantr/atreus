@@ -245,7 +245,7 @@ module screw_holes(hole_radius) {
 }
 
 module trackpoint_holes() {
-  translate([0,10]) {
+  translate([0,11]) {
       circle(trackpoint_hole_radius);
   }
 }
